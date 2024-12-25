@@ -29,3 +29,7 @@ Tiện ích này chỉ dành cho mục đính học tập, không sử dụng n�
   alt="Alt text"
   title="Optional title"
   style="display: inline-block; margin: 0 auto; max-width: 300px">
+
+## Lịch sử cập nhật
+
+-   [Bấm vô đây để xem lịch sử cập nhật](./Changelog.md)

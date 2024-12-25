@@ -1,4 +1,4 @@
-class Ws {
+class fb {
 	static Alert(e, t) {
 		let n = document.getElementById('notify');
 		n.innerHTML = '';
@@ -22,24 +22,24 @@ class Ws {
 			}, 2550);
 	}
 }
-const ws_start = document.getElementById('wt-button'),
-	ws_pause = document.getElementById('wt-reset'),
-	ws_info = document.getElementById('wt-info'),
-	ws_content = document.getElementById('wt-content'),
-	ws_fast = document.getElementById('fast'),
-	ws_history = document.getElementById('wt-history');
+const fb_start = document.getElementById('wt-button'),
+	fb_pause = document.getElementById('wt-reset'),
+	fb_info = document.getElementById('wt-info'),
+	fb_content = document.getElementById('wt-content'),
+	fb_fast = document.getElementById('fast'),
+	fb_history = document.getElementById('wt-history');
 let fast_mod = !1;
-ws_fast.addEventListener('change', () => {
-	fast_mod = ws_fast.checked;
+fb_fast.addEventListener('change', () => {
+	fast_mod = fb_fast.checked;
 });
 
-const SaveWsHistory = info => {
-	chrome.storage.local.get(['ws-history'], data => {
-		let history = data['ws-history'] || [];
+const SavefbHistory = info => {
+	chrome.storage.local.get(['fb-history'], data => {
+		let history = data['fb-history'] || [];
 		if (!history.includes(info)) {
 			history.push(info);
 			chrome.storage.local.set({
-				'ws-history': history,
+				'fb-history': history,
 			});
 			updateHistorySelect(history);
 		}
@@ -47,54 +47,54 @@ const SaveWsHistory = info => {
 };
 
 const updateHistorySelect = history => {
-	ws_history.innerHTML = '<option value="">-- Chọn thông tin --</option>';
+	fb_history.innerHTML = '<option value="">-- Chọn thông tin --</option>';
 	history.forEach(info => {
 		const option = document.createElement('option');
 		option.value = info;
 		option.textContent = info;
-		ws_history.appendChild(option);
+		fb_history.appendChild(option);
 	});
 };
 
-ws_history.addEventListener('change', () => {
-	const selectedInfo = ws_history.value;
+fb_history.addEventListener('change', () => {
+	const selectedInfo = fb_history.value;
 	if (selectedInfo) {
-		ws_info.value = selectedInfo;
+		fb_info.value = selectedInfo;
 	}
 });
 
-const SaveWsInfo = e => {
-		chrome.storage.local.get(['ws-info'], t => {
-			t['ws-info'] && t['ws-info'] === e
-				? (chrome.storage.local.remove('ws-info'),
+const SavefbInfo = e => {
+		chrome.storage.local.get(['fb-info'], t => {
+			t['fb-info'] && t['fb-info'] === e
+				? (chrome.storage.local.remove('fb-info'),
 				  chrome.storage.local.set({
-						'ws-info': e,
+						'fb-info': e,
 				  }))
 				: chrome.storage.local.set({
-						'ws-info': e,
+						'fb-info': e,
 				  });
 		});
 	},
-	GetWsInfo = e => {
-		chrome.storage.local.get(['ws-info'], t => {
-			t['ws-info'] ? e(t['ws-info']) : e(null);
+	GetfbInfo = e => {
+		chrome.storage.local.get(['fb-info'], t => {
+			t['fb-info'] ? e(t['fb-info']) : e(null);
 		});
 	},
-	SaveWsContent = e => {
-		chrome.storage.local.get(['ws-content'], t => {
-			t['ws-content']
-				? (chrome.storage.local.remove('ws-content'),
+	SavefbContent = e => {
+		chrome.storage.local.get(['fb-content'], t => {
+			t['fb-content']
+				? (chrome.storage.local.remove('fb-content'),
 				  chrome.storage.local.set({
-						'ws-content': e,
+						'fb-content': e,
 				  }))
 				: chrome.storage.local.set({
-						'ws-content': e,
+						'fb-content': e,
 				  });
 		});
 	},
-	GetWsContent = e => {
-		chrome.storage.local.get(['ws-content'], t => {
-			t['ws-content'] ? e(t['ws-content']) : e(null);
+	GetfbContent = e => {
+		chrome.storage.local.get(['fb-content'], t => {
+			t['fb-content'] ? e(t['fb-content']) : e(null);
 		});
 	};
 
@@ -103,7 +103,7 @@ function Cookies() {
 		document.cookie = e.replace(/^ +/, '').replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
 	});
 }
-ws_start.addEventListener('click', () => {
+fb_start.addEventListener('click', () => {
 	chrome.tabs.query(
 		{
 			active: !0,
@@ -112,44 +112,51 @@ ws_start.addEventListener('click', () => {
 		e => {
 			const t = e[0].url;
 			var n, o;
-			if (/^https:\/\/www\.facebook\.com\/messages\/t\/.+$/.test(t)) {
-				const t = ws_info.value.trim(),
-					s = ws_content.value.trim();
-				if ('' === t) return void alert('Thông tin không được để trống!');
-				if (!/^\d+\|.+$/.test(t)) return void alert('Thông tin phải là định dạng: uid|fullname');
-				if (s.length > 999) return void alert('Nội dung không được vượt quá 300 ký tự.');
-				const [a, c] = t.split('|'),
-					r = s
-						.split(',')
-						.map(e => e.trim())
-						.filter(e => e);
-				(Tag = !0),
-					(o = t),
-					SaveWsHistory(t),
-					chrome.storage.local.get(['ws-info'], e => {
-						e['ws-info'] && e['ws-info'] === o
-							? (chrome.storage.local.remove('ws-info'),
-							  chrome.storage.local.set({
-									'ws-info': o,
-							  }))
-							: chrome.storage.local.set({
-									'ws-info': o,
-							  });
-					}),
-					(n = s),
-					chrome.storage.local.get(['ws-content'], e => {
-						e['ws-content']
-							? (chrome.storage.local.remove('ws-content'),
-							  chrome.storage.local.set({
-									'ws-content': n,
-							  }))
-							: chrome.storage.local.set({
-									'ws-content': n,
-							  });
-					}),
-					Cookies(),
-					Loop(a, c, r.length > 0 ? r : [''], e[0].id);
-			} else alert('Hãy đến trang https://www.facebook.com/messages/t/id_group để sử dụng tools.');
+			if (!/^https:\/\/www\.facebook\.com\/messages\/t\/.+$/.test(t)) {
+				fb.Alert('warning', 'Đang chuyển hướng đến trang Messenger...');
+				setTimeout(() => {
+					chrome.tabs.update(e[0].id, {
+						url: 'https://www.facebook.com/messages/t/',
+					});
+				}, 5000);
+				return;
+			}
+
+			const info = fb_info.value.trim();
+			if ('' === info) return void alert('Thông tin không được để trống!');
+			if (!/^\d+\|.+$/.test(info)) return void alert('Thông tin phải là định dạng: uid|fullname');
+			if (fb_content.value.length > 999) return void alert('Nội dung không được vượt quá 300 ký tự.');
+			const [a, c] = info.split('|'),
+				r = fb_content.value
+					.split(',')
+					.map(e => e.trim())
+					.filter(e => e);
+			(Tag = !0),
+				(o = info),
+				SavefbHistory(info),
+				chrome.storage.local.get(['fb-info'], e => {
+					e['fb-info'] && e['fb-info'] === o
+						? (chrome.storage.local.remove('fb-info'),
+						  chrome.storage.local.set({
+								'fb-info': o,
+						  }))
+						: chrome.storage.local.set({
+								'fb-info': o,
+						  });
+				}),
+				(n = fb_content.value),
+				chrome.storage.local.get(['fb-content'], e => {
+					e['fb-content']
+						? (chrome.storage.local.remove('fb-content'),
+						  chrome.storage.local.set({
+								'fb-content': n,
+						  }))
+						: chrome.storage.local.set({
+								'fb-content': n,
+						  });
+				}),
+				Cookies(),
+				Loop(a, c, r.length > 0 ? r : [''], e[0].id);
 		}
 	);
 });
@@ -201,22 +208,22 @@ const Loop = async (e, t, n, o) => {
 		await new Promise(e => setTimeout(e, a));
 	}
 };
-ws_pause.addEventListener('click', () => {
-	(Tag = !1), Ws.Alert('success', 'Dừng auto tag thành công!');
+fb_pause.addEventListener('click', () => {
+	(Tag = !1), fb.Alert('success', 'Dừng auto tag thành công!');
 }),
 	chrome.runtime.onMessage.addListener((e, t, n) => {
 		'notify' === e.type && alert(e.message);
 	}),
-	GetWsContent(e => {
-		e && (ws_content.value = e);
+	GetfbContent(e => {
+		e && (fb_content.value = e);
 	}),
-	GetWsInfo(e => {
-		e && (ws_info.value = e);
+	GetfbInfo(e => {
+		e && (fb_info.value = e);
 	});
 
 // Load history on startup
-chrome.storage.local.get(['ws-history'], data => {
-	if (data['ws-history']) {
-		updateHistorySelect(data['ws-history']);
+chrome.storage.local.get(['fb-history'], data => {
+	if (data['fb-history']) {
+		updateHistorySelect(data['fb-history']);
 	}
 });
