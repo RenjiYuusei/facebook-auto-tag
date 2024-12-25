@@ -32,4 +32,4 @@ Tiện ích này chỉ dành cho mục đính học tập, không sử dụng n�
 
 ## Lịch sử cập nhật
 
--   [Bấm vô đây để xem lịch sử cập nhật](./Changelog.md)
+-   [Bấm vô đây để xem lịch sử cập nhật](./CHANGELOG.md)
